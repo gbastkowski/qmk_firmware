@@ -100,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                           |       |       |       |  |       |       |       |
  *                                           `-----------------------'  `-----------------------'
  */
-    RESET    ,_______,_______,_______,_______,_______,_______,                   _______,_______,KC_NLCK,KC_PSLS,KC_PAST,KC_PMNS,_______  ,
+    QK_MAKE  ,_______,_______,_______,_______,_______,_______,                   _______,_______,KC_NUM, KC_PSLS,KC_PAST,KC_PMNS,_______  ,
     _______  ,KC_PSLS,KC_KP_7,KC_KP_8,KC_KP_9,KC_PMNS,KC_TILD,                   _______,_______,KC_KP_7,KC_KP_8,KC_KP_9,KC_PPLS,_______  ,
     _______  ,KC_PAST,KC_KP_4,KC_KP_5,KC_KP_6,KC_PPLS,                                   _______,KC_KP_4,KC_KP_5,KC_KP_6,KC_PPLS,_______  ,
     _______  ,KC_KP_0,KC_KP_1,KC_KP_2,KC_KP_3,KC_PDOT,_______,                   _______,_______,KC_KP_1,KC_KP_2,KC_KP_3,KC_PENT,_______  ,
@@ -109,24 +109,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                               _______,   _______,
                                               _______,KC_PENT,_______,   _______,_______,KC_KP_0
 ),
-};
-
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:
-        if (record->event.pressed) {
-          SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-        }
-        break;
-        case 1:
-        if (record->event.pressed) { // For resetting EEPROM
-          eeconfig_init();
-        }
-        break;
-      }
-    return MACRO_NONE;
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -161,18 +143,14 @@ void matrix_init_user(void) {
 
 };
 
-
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
-
     uint8_t layer = biton32(layer_state);
-
     ergodox_board_led_off();
     ergodox_right_led_1_off();
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
     switch (layer) {
-      // TODO: Make this relevant to the ErgoDox EZ.
         case 1:
             ergodox_right_led_1_on();
             break;
