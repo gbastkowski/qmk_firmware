@@ -341,7 +341,7 @@ __attribute__((weak)) void st7565_task_user(void) {
         };
 
         st7565_write(qmk_logo, false);
-        st7565_write("  Infinity  Ergodox  ", false);
+        st7565_write("   Gunnar  Ergodox   ", false);
     }
 }
 #endif
