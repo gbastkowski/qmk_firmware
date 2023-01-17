@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TOGGLE  1
 
+// FIXME remove workaround after https://github.com/qmk/qmk_firmware/issues/19420 has been closed
+#define usb_lld_disconnect_bus(usbp) do {} while (0)
+
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
