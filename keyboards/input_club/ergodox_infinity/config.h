@@ -28,12 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_MAX_SPEED      7
 #define MOUSEKEY_WHEEL_DELAY 0
 
-#define TAPPING_TOGGLE  1
+/* #define TAPPING_TOGGLE  1 */
 
 // FIXME remove workaround after https://github.com/qmk/qmk_firmware/issues/19420 has been closed
-#define usb_lld_disconnect_bus(usbp) do {} while (0)
+/* #define usb_lld_disconnect_bus(usbp) do {} while (0) */
 
-#define TAPPING_TERM    200
+/* #define TAPPING_TERM    200 */
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
@@ -55,8 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_BRIGHTNESS_HI       255
 
 /* LED matrix driver */
-#define LED_DRIVER_ADDR_1 0x74
-#define LED_DRIVER_COUNT 1
+#define IS31FL3731_I2C_ADDRESS_1 IS31FL3731_I2C_ADDRESS_GND
 #define LED_MATRIX_LED_COUNT 76
 #define LED_MATRIX_SPLIT { 38, 38 }
 #define LED_DISABLE_WHEN_USB_SUSPENDED
