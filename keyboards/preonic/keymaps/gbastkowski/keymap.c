@@ -4,6 +4,7 @@
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 #define L_QWERTSPLITLY 0
 #define L_FN 1
+#define L_STENO 2
 
 // Defines for Mac specific key accelerators used in map. Some of these are very awkward to type.
 // These are the default bindings for Mac, some of which may be turned off or changed, check your
@@ -30,6 +31,11 @@
 #define MK_TILD LSFT(KC_GRV)
 #define MK_RALT OSM(MOD_RALT)
 #define TG_FN   TG(L_FN)
+
+enum custom_keycodes {
+    PLOVER = SAFE_RANGE,
+    EXT_PLV,
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -64,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |---------+---------+---------+---------+---------+---------||---------+---------+---------+---------+---------+---------|
  * |         |         |    {    |    }    |         |         ||   Fn    |         |         |         |         |    \    |
  * |---------+---------+---------+---------+---------+---------++---------+---------+---------+---------+---------+---------|
- * |         |         |         |         |   Tab   |         ||         |   Del   |         |         |         |         |
+ * |  CAPS   |  STENO  |         |         |   Tab   |         ||         |   Del   |         |         |         |         |
  * `------------------------------------------------------------------------------------------------------------------------'
  */
 [L_FN] = LAYOUT_preonic_grid( \
@@ -72,7 +78,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______  ,_______  ,MK_LPAR  ,MK_RPAR  ,_______  ,MK_TILD   ,KC_GRV   ,_______  ,_______  ,_______  ,_______  ,_______  ,\
     _______  ,_______  ,KC_LBRC  ,KC_RBRC  ,_______  ,_______   ,_______  ,KC_LEFT  ,KC_DOWN  ,KC_UP    ,KC_RGHT  ,_______  ,\
     _______  ,_______  ,MK_LBRA  ,MK_RBRA  ,_______  ,_______   ,TG_FN    ,_______  ,_______  ,_______  ,_______  ,_______  ,\
-    KC_CAPS  ,_______  ,_______  ,_______  ,_______  ,_______   ,_______  ,KC_DEL   ,_______  ,_______  ,_______  ,_______ \
+    KC_CAPS  ,PLOVER   ,_______  ,_______  ,_______  ,_______   ,_______  ,KC_DEL   ,_______  ,_______  ,_______  ,_______   \
+),
+
+/* Steno
+ * ,------------------------------------------------------------------------------------------------------------------------.
+ * |    #    |    #    |    #    |    #    |    #    |    #    ||    #    |    #    |    #    |    #    |    #    |    #    |
+ * |---------+---------+---------+---------+---------+---------++---------+---------+---------+---------+---------+---------|
+ * |   Fn    |    S    |    T    |    P    |    H    |    *    ||    *    |    F    |    P    |    L    |    T    |    D    |
+ * |---------+---------+---------+---------+---------+---------++---------+---------+---------+---------+---------+---------|
+ * |         |    S    |    K    |    W    |    R    |    *    ||    *    |    R    |    B    |    G    |    S    |    Z    |
+ * |---------+---------+---------+---------+---------+---------++---------+---------+---------+---------+---------+---------|
+ * |         |         |         |         |         |         ||         |         |         |         |         |         |
+ * |---------+---------+---------+---------+---------+---------++---------+---------+---------+---------+---------+---------|
+ * |  Exit   |         |         |         |    A    |    O    ||    E    |    U    |         |   PWR   |  RES1   |  RES2   |
+ * `------------------------------------------------------------------------------------------------------------------------'
+ */
+[L_STENO] = LAYOUT_preonic_grid( \
+    STN_N1   ,STN_N2   ,STN_N3   ,STN_N4   ,STN_N5   ,STN_N6    ,STN_N7   ,STN_N8   ,STN_N9   ,STN_NA   ,STN_NB   ,STN_NC   ,\
+    STN_FN   ,STN_S1   ,STN_TL   ,STN_PL   ,STN_HL   ,STN_ST1   ,STN_ST3  ,STN_FR   ,STN_PR   ,STN_LR   ,STN_TR   ,STN_DR   ,\
+    XXXXXXX  ,STN_S2   ,STN_KL   ,STN_WL   ,STN_RL   ,STN_ST2   ,STN_ST4  ,STN_RR   ,STN_BR   ,STN_GR   ,STN_SR   ,STN_ZR   ,\
+    XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX   ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,\
+    EXT_PLV  ,XXXXXXX  ,XXXXXXX  ,XXXXXXX  ,STN_A    ,STN_O     ,STN_E    ,STN_U    ,XXXXXXX  ,STN_PWR  ,STN_RE1  ,STN_RE2   \
 )
 
 };
@@ -94,6 +121,9 @@ void matrix_init_user(void) {
     #ifdef AUDIO_ENABLE
         /* startup_user(); */
     #endif
+#ifdef STENO_ENABLE_ALL
+    steno_set_mode(STENO_MODE_GEMINI);
+#endif
 }
 
 #ifdef AUDIO_ENABLE
@@ -120,3 +150,19 @@ void matrix_init_user(void) {
 /* } */
 
 #endif
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case PLOVER:
+            if (!record->event.pressed) {
+                layer_on(L_STENO);
+            }
+            return false;
+        case EXT_PLV:
+            if (record->event.pressed) {
+                layer_off(L_STENO);
+            }
+            return false;
+    }
+    return true;
+}

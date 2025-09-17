@@ -13,3 +13,4 @@ RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.
 KEY_LOCK_ENABLE = yes
 
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
+STENO_ENABLE = yes
